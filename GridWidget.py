@@ -11,6 +11,7 @@ from arithmetic.Astar.Map import Map
 from arithmetic.Astar.astar import astar
 from programResult import programResult
 
+
 class GridWidget(QWidget):
     def __init__(self, main_window):
         super().__init__()
@@ -31,12 +32,14 @@ class GridWidget(QWidget):
         self.endPoint = None
         self.result = None
         self.win_main = main_window
+
     # 绘图
     def paintEvent(self, event):
         painter = QPainter(self)
         for i in range(self.width):
             for j in range(self.height):
-                painter.fillRect(i * self.cell_size, j * self.cell_size, self.cell_size, self.cell_size, self.grid_colors[i][j])
+                painter.fillRect(i * self.cell_size, j * self.cell_size, self.cell_size, self.cell_size,
+                                 self.grid_colors[i][j])
                 painter.drawRect(i * self.cell_size, j * self.cell_size, self.cell_size, self.cell_size)
 
     # 鼠标点击事件
@@ -57,7 +60,7 @@ class GridWidget(QWidget):
                 self.update()
             if event.button() == Qt.RightButton:
                 if self.Map[y][x] == 1:
-                    if self.startPoint == None:  # 起点设置
+                    if self.startPoint is None:  # 起点设置
                         self.win_main.printf("添加起始点：", y, x)
 
                         if self.grid_colors[x][y] == QColor(255, 255, 255):
@@ -67,7 +70,7 @@ class GridWidget(QWidget):
                             self.grid_colors[x][y] = QColor(255, 255, 255)
                         self.startPoint = (y, x)
                         print(self.startPoint)
-                    elif self.endPoint == None and self.startPoint != (x, y):  # 终点设置
+                    elif self.endPoint is None and self.startPoint != (x, y):  # 终点设置
                         self.win_main.printf("添加终点：", y, x)
 
                         if self.grid_colors[x][y] == QColor(255, 255, 255):
@@ -96,7 +99,7 @@ class GridWidget(QWidget):
             self.grid_colors[y][x] = QColor(255, 255, 255)
             self.win_main.printf("清除终点：", x, y)
 
-        if self.result != None:
+        if self.result is not None:
             for i in self.result:
                 if i != self.startPoint and i != self.endPoint:
                     self.grid_colors[i[1]][i[0]] = QColor(255, 255, 255)
@@ -104,7 +107,7 @@ class GridWidget(QWidget):
 
     # 清空地图方法
     def clearObstacles(self):
-        if self.result != None:
+        if self.result is not None:
             for i in self.result:
                 if i != self.startPoint and i != self.endPoint:
                     self.grid_colors[i[1]][i[0]] = QColor(255, 255, 255)
@@ -116,31 +119,32 @@ class GridWidget(QWidget):
                         self.grid_colors[j][i] = QColor(255, 255, 255)
         self.update()
         self.clearStartAndEnd()
-        self.win_main.printf("已清空地图！",None,None)
+        self.win_main.printf("已清空地图！", None, None)
         # print(self.Map)
 
     def startPath(self):
-        window = programResult(self.height,self.width,self.cell_size,self.startPoint,self.endPoint,self.Map)
+        window = programResult(self.height, self.width, self.cell_size, self.startPoint, self.endPoint, self.Map)
         window.run()
+
     # 路径规划调用方法 后期根据不同的用户选择，运行不同的算法，现阶段采用简单的AStar算法实现路径规划
     # def startPath(self):
-        # # print("aaa")
-        # map = Map(self.Map, self.startPoint[0], self.startPoint[1], self.endPoint[0], self.endPoint[1])
-        # self.result = astar(map)
-        # self.result.reverse()
-        # # print(len(self.result))
-        # if len(self.result) > 0:
-        #     for i in self.result:
-        #         if i != self.startPoint and i != self.endPoint:
-        #             self.grid_colors[i[1]][i[0]] = QColor(255, 255, 0)
-        #     self.update()
-        # else:
-        #     self.win_main.printf("无可规划路径",None,None)
-        # self.win_main.printf("AStar算法路径规划长度：%d,路径为 %s" %(len(self.result),self.result),None,None)
+    # # print("aaa")
+    # map = Map(self.Map, self.startPoint[0], self.startPoint[1], self.endPoint[0], self.endPoint[1])
+    # self.result = astar(map)
+    # self.result.reverse()
+    # # print(len(self.result))
+    # if len(self.result) > 0:
+    #     for i in self.result:
+    #         if i != self.startPoint and i != self.endPoint:
+    #             self.grid_colors[i[1]][i[0]] = QColor(255, 255, 0)
+    #     self.update()
+    # else:
+    #     self.win_main.printf("无可规划路径",None,None)
+    # self.win_main.printf("AStar算法路径规划长度：%d,路径为 %s" %(len(self.result),self.result),None,None)
 
     # 修改地图方法
-    def modifyMap(self,size):
-        if self.result == None:
+    def modifyMap(self, size):
+        if self.result is None:
             if isinstance(size, str):
                 self.win_main.printf("请输入正确的分辨率！", None, None)
             if int(size) >= 0:
@@ -159,10 +163,11 @@ class GridWidget(QWidget):
             else:
                 self.win_main.printf("请输入正确的分辨率！", None, None)
         else:
-            self.win_main.printf("当前地图已规划结果不可调整地图分辨率率",None,None)
+            self.win_main.printf("当前地图已规划结果不可调整地图分辨率率", None, None)
+
     # 默认地图
     def defaultMap(self):
-        if self.result == None:
+        if self.result is None:
             if self.cell_size == 10:
                 self.win_main.printf("该地图已经是默认地图！", None, None)
             else:
@@ -178,7 +183,8 @@ class GridWidget(QWidget):
                 self.win_main.printf("分辨率调整成功！", None, None)
                 self.update()
         else:
-            self.win_main.printf("当前地图已规划结果不可调整地图分辨率率",None,None)
+            self.win_main.printf("当前地图已规划结果不可调整地图分辨率率", None, None)
+
     # 保存地图的方法,我们需要保存的是地图的起始点坐
     # 标,障碍物坐标,以及运行结果的坐标,当我们点击打开文件时会自动识别并展示地图的效果
     # 保存地图的方法现在只是保存的地图的起始点障碍以及规划后的路径结果
@@ -199,9 +205,8 @@ class GridWidget(QWidget):
         for i in range(self.height):
             for j in range(self.width):
                 if self.Map[i][j] == 0:
-                    self.block_map.append((i,j))
+                    self.block_map.append((i, j))
         # print(self.block_map)
-
 
         if file_path:
             data = {
@@ -284,17 +289,17 @@ class GridWidget(QWidget):
                                 self.grid_colors[j][i] = QColor(0, 0, 0)
                     self.update()
                 # 绘制起点
-                if self.startPoint != None:
+                if self.startPoint is not None:
                     self.grid_colors[self.startPoint[1]][self.startPoint[0]] = QColor(255, 0, 0)
                 self.update()
                 # 绘制终点
-                if self.endPoint != None :
+                if self.endPoint is not None:
                     # print(self.endPoint[0])
                     # print(self.endPoint[1])
                     self.grid_colors[self.endPoint[1]][self.endPoint[0]] = QColor(0, 255, 0)
                 self.update()
                 # 绘制规划结果
-                if self.result != None:
+                if self.result is not None:
                     for i in range(len(self.result)):
                         if self.grid_colors[self.result[i][1]][self.result[i][0]] == QColor(255, 255, 255):
                             self.grid_colors[self.result[i][1]][self.result[i][0]] = QColor(255, 255, 0)
@@ -303,9 +308,9 @@ class GridWidget(QWidget):
                 self.update()
                 self.win_main.printf("地图已成功打开！", None, None)
 
-    def painting_ori(self,x, y):#这个和点击画起始点功能冲突 暂时分隔这两个功能，假设输入起始点前地图为空，所以直接填色即可
+    def painting_ori(self, x, y):  # 这个和点击画起始点功能冲突 暂时分隔这两个功能，假设输入起始点前地图为空，所以直接填色即可
         if self.Map[y][x] == 1:
-            if self.startPoint == None:  # 起点设置
+            if self.startPoint is None:  # 起点设置
                 self.win_main.printf("添加起始点：", y, x)
 
                 if self.grid_colors[x][y] == QColor(255, 255, 255):
@@ -314,9 +319,9 @@ class GridWidget(QWidget):
                 print(self.startPoint)
             self.update()
 
-    def painting_end(self,x1,y1):#假设输入终止点前地图为空，所以直接填色即可
+    def painting_end(self, x1, y1):  # 假设输入终止点前地图为空，所以直接填色即可
         if self.Map[y1][x1] == 1:
-            if self.endPoint == None and self.startPoint != (x1, y1):  # 终点设置
+            if self.endPoint is None and self.startPoint != (x1, y1):  # 终点设置
                 self.win_main.printf("添加终点：", y1, x1)
 
                 if self.grid_colors[x1][y1] == QColor(255, 255, 255):
@@ -325,14 +330,14 @@ class GridWidget(QWidget):
                 print(self.endPoint)
             self.update()
 
-    #随机绘制障碍物
-    def paint_block(self,x1,y1,x2,y2):
+    # 随机绘制障碍物
+    def paint_block(self, x1, y1, x2, y2):
         for i in range(3):
-            x=random.randint(x1,x2)
-            y=random.randint(y1,y2)
-            z=random.randint(10,15)
-            for j in range (z):
-                if (x, y) != self.startPoint and (x, y) != self.endPoint and x<100 and y<40:
+            x = random.randint(x1, x2)
+            y = random.randint(y1, y2)
+            z = random.randint(10, 15)
+            for j in range(z):
+                if (x, y) != self.startPoint and (x, y) != self.endPoint and x < 100 and y < 40:
                     self.Map[y][x] = 0
                     if self.grid_colors[x][y] == QColor(255, 255, 255):
                         print(self.Map)
@@ -348,7 +353,7 @@ class GridWidget(QWidget):
             y = random.randint(y1, y2)
             z = random.randint(10, 15)
             for j in range(z):
-                if (x, y) != self.startPoint and (x, y) != self.endPoint  and x<100 and y<40:
+                if (x, y) != self.startPoint and (x, y) != self.endPoint and x < 100 and y < 40:
                     self.Map[y][x] = 0
                     if self.grid_colors[x][y] == QColor(255, 255, 255):
                         print(self.Map)

@@ -19,7 +19,7 @@ class Ui_Form(object):
         Form.setMinimumSize(QtCore.QSize(580, 400))
         Form.setMaximumSize(QtCore.QSize(580, 400))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
         Form.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.label_2 = QtWidgets.QLabel(Form)
@@ -84,7 +84,6 @@ class Ui_Form(object):
         self.edt_password.setPlaceholderText(_translate("Form", "密码"))
         self.btn_login.setText(_translate("Form", "登录平台"))
 
-
     #  登录成功后跳转主窗口方法 默认账号密码： admin
     def loginOn(self):
         username = self.edt_username.text().strip()
@@ -95,7 +94,7 @@ class Ui_Form(object):
                 self.mainWindow_new = QMainWindow()
                 ui_main = Ui_MainWindow()
                 grid_widget = GridWidget(ui_main)
-                ui_main.setupUi(self.mainWindow_new,grid_widget)
+                ui_main.setupUi(self.mainWindow_new, grid_widget)
 
                 # 添加地图
 
@@ -107,12 +106,13 @@ class Ui_Form(object):
             error_message = "请仔细检查用户名与密码"
             QMessageBox.critical(mainWindow, "错误提示", error_message, QMessageBox.Ok)
 
+
 if __name__ == '__main__':
     import sys
-    app=QtWidgets.QApplication(sys.argv)
-    ui=Ui_Form()
-    mainWindow=QtWidgets.QMainWindow()
+
+    app = QtWidgets.QApplication(sys.argv)
+    ui = Ui_Form()
+    mainWindow = QtWidgets.QMainWindow()
     ui.setupUi(mainWindow)
     mainWindow.show()
     sys.exit(app.exec())
-

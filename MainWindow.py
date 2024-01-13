@@ -4,15 +4,16 @@ from PyQt5.QtWidgets import QWidget, QMainWindow, QMessageBox, QApplication, QFi
 from AlgorithmList import AlgorithmList
 from GridWidget import GridWidget
 
+
 class Ui_MainWindow(object):
     windows = []  # 存储所有创建的窗口实例
 
-    def setupUi(self, MainWindow,grid_widget):
+    def setupUi(self, MainWindow, grid_widget):
         self.loginWindow_new = None
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1006, 850)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -54,7 +55,7 @@ class Ui_MainWindow(object):
         # self.pushButton_3.clicked.connect(self.clearStartAndEnd)
         # 清除起始点方法链接
         self.pushButton_3.clicked.connect(grid_widget.clearStartAndEnd)
-        #清楚所有障碍方法链接
+        # 清楚所有障碍方法链接
         self.pushButton.clicked.connect(grid_widget.clearObstacles)
         # self.checkBox = QtWidgets.QCheckBox(self.centralwidget)
         # self.checkBox.setGeometry(QtCore.QRect(310, 450, 71, 21))
@@ -101,11 +102,11 @@ class Ui_MainWindow(object):
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(85, 475, 51, 21))
         self.lineEdit.setObjectName("lineEdit")
-        self.btn_modfiyMap = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_modfiyMap.setGeometry(QtCore.QRect(150, 475, 75, 23))
-        self.btn_modfiyMap.setObjectName("btn_modfiyMap")
+        self.btn_modifyMap = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_modifyMap.setGeometry(QtCore.QRect(150, 475, 75, 23))
+        self.btn_modifyMap.setObjectName("btn_modifyMap")
         # 调整地图的粒度
-        self.btn_modfiyMap.clicked.connect(lambda: grid_widget.modifyMap(int(self.lineEdit.text())))
+        self.btn_modifyMap.clicked.connect(lambda: grid_widget.modifyMap(int(self.lineEdit.text())))
         # 默认地图按钮
         self.btn_default = QtWidgets.QPushButton(self.centralwidget)
         self.btn_default.setGeometry(QtCore.QRect(230, 475, 75, 23))
@@ -176,14 +177,13 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionArithmeticList)
         self.toolBar.addAction(self.actionExit)
 
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.grid_widget = grid_widget
 
     # 文本框输出提示信息
-    def printf(self,msg,x,y):
-        if x==None and y== None:
+    def printf(self, msg, x, y):
+        if x is None and y is None:
             self.text_result.append("%s" % msg)
         else:
             self.text_result.append("%s(%d:%d)" % (msg, x, y))
@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
         new_window = QtWidgets.QMainWindow()
         ui = Ui_MainWindow()
         grid_widget = GridWidget(ui)
-        ui.setupUi(new_window,grid_widget)
+        ui.setupUi(new_window, grid_widget)
 
         new_window.setWindowTitle('基于Pygame的路径规划算法仿真平台')
         # 添加地图
@@ -223,9 +223,10 @@ class Ui_MainWindow(object):
     def helpInfo(self):
         message_box = QMessageBox()
         message_box.setWindowTitle("基于Pygame的路径规划算法仿真平台V1.0帮助手册")
-        message_box.setText("路径规划仿真平台V1.0版本是指一种软件工具，可以模拟路径，通过路径规划算法计算最优路径，并可视化显示路径和相关参数。用户可以通过输入环境地图和调整参数等方式，对仿真平台进行操作和控制。"
-                            "仿真平台的使用：本平台使用手动设置起点、终点与障碍点的位置，通过鼠标左键设置障碍点，鼠标右键点击第一次为红色起点点击第二次为绿色终点，地图是可以实时清空和刷新的，只要用户对地图进行改变"
-                            "平台就会自动刷新，并且本平台采用可以手动调整地图的粒度大小的，但是建议用户采用的地图粒度大小在10-50区间为最佳效果。")
+        message_box.setText(
+            "路径规划仿真平台V1.0版本是指一种软件工具，可以模拟路径，通过路径规划算法计算最优路径，并可视化显示路径和相关参数。用户可以通过输入环境地图和调整参数等方式，对仿真平台进行操作和控制。"
+            "仿真平台的使用：本平台使用手动设置起点、终点与障碍点的位置，通过鼠标左键设置障碍点，鼠标右键点击第一次为红色起点点击第二次为绿色终点，地图是可以实时清空和刷新的，只要用户对地图进行改变"
+            "平台就会自动刷新，并且本平台采用可以手动调整地图的粒度大小的，但是建议用户采用的地图粒度大小在10-50区间为最佳效果。")
         message_box.setIcon(QMessageBox.Information)
         message_box.setStandardButtons(QMessageBox.Ok)
         message_box.button(QMessageBox.Ok).setFixedSize(100, 40)  # 设置按钮尺寸
@@ -237,7 +238,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "基于Pygame的路径规划算法仿真平台"))
         self.pushButton.setText(_translate("MainWindow", "清空地图"))
         self.text_result.setPlaceholderText(_translate("MainWindow", "输出路径规划结果"))
-        self.text_result.append("欢迎来到基于Pygame的路径规划算法仿真平台，以下是路径规划的结果仅供大家参考（右键按第一次是起点第二次是终点，左键设置起点）：")
+        self.text_result.append(
+            "欢迎来到基于Pygame的路径规划算法仿真平台，以下是路径规划的结果仅供大家参考（右键按第一次是起点第二次是终点，左键设置起点）：")
         self.text_result.append("红色为起点、绿色为终点、黑色为障碍点，平台具体方法请点击帮助手册查看！")
         self.pushButton_new.setText(_translate("MainWindow", "开始规划"))
         self.pushButton_3.setText(_translate("MainWindow", "清空起始点"))
@@ -255,7 +257,7 @@ class Ui_MainWindow(object):
         self.actionhelp.setText(_translate("MainWindow", "帮助手册"))
         self.actionmodel.setText(_translate("MainWindow", "下载地图模板"))
         self.label_map.setText(_translate("MainWindow", "分辨率："))
-        self.btn_modfiyMap.setText(_translate("MainWindow", "调整"))
+        self.btn_modifyMap.setText(_translate("MainWindow", "调整"))
         self.btn_default.setText(_translate("MainWindow", "默认"))
         self.actionArithmeticList.setText(_translate("MainWindow", "算法列表"))
         self.pushButton_4.setText(_translate("MainWindow", "确定"))
@@ -272,7 +274,7 @@ class Ui_MainWindow(object):
         if self.checkBox.isChecked():
             self.grid_widget.startPath()
 
-    def ori_end_input(self):#输入起始点终点函数
+    def ori_end_input(self):  # 输入起始点终点函数
         coordinate = self.text_input.text()
         print(coordinate)
         pattern = r"\((\d+),(\d+)\)"  # 匹配坐标的正则表达式模式
@@ -283,15 +285,15 @@ class Ui_MainWindow(object):
             keyy = int(match.group(2))  # 提取纵坐标
             print("起点横坐标:", keyx)
             print("起点纵坐标:", keyy)
-            grid_widget.painting_ori(keyx, keyy)#目前执行到这里程序就结束了，应该是调用有问题
+            grid_widget.painting_ori(keyx, keyy)  # 目前执行到这里程序就结束了，应该是调用有问题
         else:
             print("坐标格式不正确")
         coordinate_2 = self.text_input_2.text()
-        #print(coordinate_2)
+        # print(coordinate_2)
         pattern_2 = r"\((\d+),(\d+)\)"  # 匹配坐标的正则表达式模式
         match_2 = re.match(pattern, coordinate_2)
         if match_2:
-            #global keyx_2, keyy_2
+            # global keyx_2, keyy_2
             keyx_2 = int(match_2.group(1))  # 提取横坐标
             keyy_2 = int(match_2.group(2))  # 提取纵坐标
             print("终点横坐标:", keyx_2)
@@ -300,21 +302,21 @@ class Ui_MainWindow(object):
         else:
             print("坐标格式不正确")
 
-    #点击随机生成障碍物按钮
+    # 点击随机生成障碍物按钮
     def block_click(self):
         coordinate = self.text_input.text()
         pattern = r"\((\d+),(\d+)\)"  # 匹配坐标的正则表达式模式
         match = re.match(pattern, coordinate)
         keyx = int(match.group(1))  # 提取横坐标
         keyy = int(match.group(2))  # 提取纵坐标
-        #引用上一个类的函数
+        # 引用上一个类的函数
         coordinate_2 = self.text_input_2.text()
         # print(coordinate_2)
         pattern_2 = r"\((\d+),(\d+)\)"  # 匹配坐标的正则表达式模式
         match_2 = re.match(pattern, coordinate_2)
         keyx_2 = int(match_2.group(1))  # 提取横坐标
         keyy_2 = int(match_2.group(2))  # 提取纵坐标
-        grid_widget.paint_block(keyx,keyy,keyx_2,keyy_2)
+        grid_widget.paint_block(keyx, keyy, keyx_2, keyy_2)
         # for _ in range(250):  # 随机选择若干个格子变黑
         #     row = random.randint(0, self.grid_widget.rows - 1)
         #     col = random.randint(0, self.grid_widget.columns - 1)
@@ -325,13 +327,15 @@ class Ui_MainWindow(object):
         self.algorithm_list = AlgorithmList()
         self.algorithm_list.show()
 
+
 if __name__ == '__main__':
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     ui = Ui_MainWindow()
     mainWindow = QtWidgets.QMainWindow()
     grid_widget = GridWidget(ui)
-    ui.setupUi(mainWindow,grid_widget)
+    ui.setupUi(mainWindow, grid_widget)
     # 添加地图
     ui.layout.addWidget(grid_widget)
     mainWindow.show()
