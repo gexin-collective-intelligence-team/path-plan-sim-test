@@ -140,7 +140,7 @@ class GridWidget(QWidget):
 
     # 修改地图方法
     def modifyMap(self,size):
-        if self.result == None:
+        if self.result == None and self.startPoint == None and self.endPoint == None:
             if isinstance(size, str):
                 self.win_main.printf("请输入正确的分辨率！", None, None)
             if int(size) >= 0:
@@ -159,7 +159,7 @@ class GridWidget(QWidget):
             else:
                 self.win_main.printf("请输入正确的分辨率！", None, None)
         else:
-            self.win_main.printf("当前地图已规划结果不可调整地图分辨率率",None,None)
+            self.win_main.printf("当前地图已起始点或障碍点不可调整地图分辨率，请清空地图后再次调整分辨率！",None,None)
     # 默认地图
     def defaultMap(self):
         if self.result == None:
