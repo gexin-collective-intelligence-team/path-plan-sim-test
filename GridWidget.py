@@ -128,23 +128,23 @@ class GridWidget(QWidget):
 
     # 路径规划调用方法 后期根据不同的用户选择，运行不同的算法，现阶段采用简单的AStar算法实现路径规划
     # def startPath(self):
-    # # print("aaa")
-    # map = Map(self.Map, self.startPoint[0], self.startPoint[1], self.endPoint[0], self.endPoint[1])
-    # self.result = astar(map)
-    # self.result.reverse()
-    # # print(len(self.result))
-    # if len(self.result) > 0:
-    #     for i in self.result:
-    #         if i != self.startPoint and i != self.endPoint:
-    #             self.grid_colors[i[1]][i[0]] = QColor(255, 255, 0)
-    #     self.update()
-    # else:
-    #     self.win_main.printf("无可规划路径",None,None)
-    # self.win_main.printf("AStar算法路径规划长度：%d,路径为 %s" %(len(self.result),self.result),None,None)
+        # # print("aaa")
+        # map = Map(self.Map, self.startPoint[0], self.startPoint[1], self.endPoint[0], self.endPoint[1])
+        # self.result = astar(map)
+        # self.result.reverse()
+        # # print(len(self.result))
+        # if len(self.result) > 0:
+        #     for i in self.result:
+        #         if i != self.startPoint and i != self.endPoint:
+        #             self.grid_colors[i[1]][i[0]] = QColor(255, 255, 0)
+        #     self.update()
+        # else:
+        #     self.win_main.printf("无可规划路径",None,None)
+        # self.win_main.printf("AStar算法路径规划长度：%d,路径为 %s" %(len(self.result),self.result),None,None)
 
     # 修改地图方法
-    def modifyMap(self, size):
-        if self.result is None:
+    def modifyMap(self,size):
+        if self.result is None and self.startPoint is None and self.endPoint is None:
             if isinstance(size, str):
                 self.win_main.printf("请输入正确的分辨率！", None, None)
             if int(size) >= 0:
@@ -163,8 +163,7 @@ class GridWidget(QWidget):
             else:
                 self.win_main.printf("请输入正确的分辨率！", None, None)
         else:
-            self.win_main.printf("当前地图已规划结果不可调整地图分辨率率", None, None)
-
+            self.win_main.printf("当前地图已起始点或障碍点不可调整地图分辨率，请清空地图后再次调整分辨率！",None,None)
     # 默认地图
     def defaultMap(self):
         if self.result is None:
@@ -207,6 +206,7 @@ class GridWidget(QWidget):
                 if self.Map[i][j] == 0:
                     self.block_map.append((i, j))
         # print(self.block_map)
+
 
         if file_path:
             data = {
