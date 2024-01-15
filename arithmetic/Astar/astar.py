@@ -27,7 +27,7 @@ def astar(workMap):
         currNode = openList.pop(0)
         lockList.append(currNode)
     result = []
-    while currNode.father != None:
+    while currNode.father is not None:
         result.append((currNode.x, currNode.y))
         currNode = currNode.father
     result.append((currNode.x, currNode.y))
