@@ -144,7 +144,12 @@ class GridWidget(QWidget):
 
     # 修改地图方法
     def modifyMap(self,size):
-        if self.result is None and self.startPoint is None and self.endPoint is None:
+        count = 0
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.Map[i][j] == 0:
+                    count += 1
+        if self.result is None and self.startPoint is None and self.endPoint is None and count > 0:
             if isinstance(size, str):
                 self.win_main.printf("请输入正确的分辨率！", None, None)
             if int(size) >= 0:
@@ -364,4 +369,18 @@ class GridWidget(QWidget):
                     #     self.win_main.printf("取消障碍点：", y, x)
                     #     self.grid_colors[x][y] = QColor(255, 255, 255)
 
+        self.update()
+
+    # 根据数量生成随机障碍物新方法
+    def randomBlock(self,num):
+        for i in range(num):
+            while True:
+                rand_x = random.randint(0, self.width - 1)
+                rand_y = random.randint(0, self.height - 1)
+                if (rand_x, rand_y) != self.startPoint and (rand_x, rand_y) != self.endPoint and self.Map[rand_y][rand_x] != 0:
+                    self.Map[rand_y][rand_x] = 0 # 设置障碍物
+                    self.grid_colors[rand_x][rand_y] = QColor(0, 0, 0)
+
+                    break
+        print(self.Map)
         self.update()
