@@ -3,8 +3,8 @@ from pygame import font
 font.init()
 
 # Screen size:
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 900
+HEIGHT = 400
 
 # Radius of the start and goal circles:
 RADIUS = 20

@@ -2,12 +2,13 @@ from .points_container import PointsContainer
 from .collision import collision
 from .utils import random_point, inside
 import pygame as pg
-from . import drawing
+# from . import drawing
+from .animation import Animation
 from . import events
 import time
 
 
-def rrt(start, goal, obstacles):
+def rrt(surface, start, goal, obstacles):
     """
     start -- point (x, y)
     goal  -- point (x, y)
@@ -30,10 +31,10 @@ def rrt(start, goal, obstacles):
         if not events.rrt_handler():  # handle user events.
             return None
 
-        if drawing.showInfo:  # drawing-related.
+        if surface.show_info:  # drawing-related.
             elapsed = time.perf_counter() - start_time
-            drawing.update_info(elapsed, nodes, height)
-            drawing.update()
+            surface.update_info(elapsed, nodes, height)
+            surface.update()
 
         sample = random_point()
         nearest = container.nns(sample)
@@ -49,7 +50,7 @@ def rrt(start, goal, obstacles):
             height = max(height, depth[sample])
             nodes += 1
 
-            drawing.add_edge((nearest, sample))
+            surface.add_edge((nearest, sample))
 
             current = sample
 
@@ -58,9 +59,9 @@ def rrt(start, goal, obstacles):
         depth[goal] = depth[current] + 1
         height = max(height, depth[goal])
         nodes += 1
-        drawing.add_edge((current, goal))
+        surface.add_edge((current, goal))
 
     elapsed = time.perf_counter() - start_time
-    drawing.update_info(elapsed, nodes, height, depth[goal])
+    surface.update_info(elapsed, nodes, height, depth[goal])
 
     return parent

@@ -6,7 +6,9 @@ from src.GridWidget import GridWidget
 from AnimationWidget import AnimationWidget
 import pygame
 from PyQt5.QtCore import QTimer
-import animation.drawing
+from config import *
+from animation.animation import Animation
+from animation.rrt import rrt
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -53,7 +55,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_new.setGeometry(QtCore.QRect(40, 450, 75, 25))
         self.pushButton_new.setObjectName("pushButton_new")
         # self.pushButton_new.clicked.connect(self.startPath)
-        self.pushButton_new.clicked.connect(self.next_iter)
+        self.pushButton_new.clicked.connect(self.start_path)
         # 清除起始点按钮
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(220, 450, 75, 25))
@@ -130,7 +132,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_5.setGeometry(QtCore.QRect(830, 470, 90, 23))
         self.pushButton_5.setObjectName("pushButton_5")
-        self.pushButton_5.clicked.connect(self.block_click)
+        # self.pushButton_5.clicked.connect(self.block_click)
+        self.pushButton_5.clicked.connect(surface.load_obstacles)
+
         self.actionCreate = QtWidgets.QAction(MainWindow)
         self.actionCreate.setObjectName("actionCreate")
         # 点击菜单连接方法
@@ -205,9 +209,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     # 创建新窗口方法
     def openNewWindow(self):
         new_window = QtWidgets.QMainWindow()
-        sur_pygame = pygame.Surface((640, 480))
-        sur_pygame.fill((64, 128, 192, 224))
-        pygame.draw.circle(sur_pygame, (255, 255, 255, 255), (100, 100), 50)
+        # sur_pygame = pygame.Surface((640, 480))
+        # sur_pygame.fill((64, 128, 192, 224))
+        # pygame.draw.circle(sur_pygame, (255, 255, 255, 255), (100, 100), 50)
         animation_widget = AnimationWidget(sur_pygame)
         ui = Ui_MainWindow(new_window, sur_pygame, animation_widget)
 
@@ -285,10 +289,18 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.combo_arithmetic.setItemText(4, _translate("MainWindow", "4"))
 
     # 路径规划
-    def startPath(self):
-        # 根据不同的算法
-        if self.checkBox.isChecked():
-            self.animation_widget.startPath()
+    # def startPath(self):
+    #     # 根据不同的算法
+    #     if self.checkBox.isChecked():
+    #         self.animation_widget.startPath()
+    def start_path(self):
+        self.surface.clear_edges_pool()
+        tree = rrt(self.surface, self.surface.start_pos, self.surface.goal_pos, self.surface.obstacles_surface)
+        if tree:  # A path was found:
+            self.surface.draw_path(tree)
+            # game_state = 'path-found'
+        # else:  # User terminated the algorithm's execution:
+        #     game_state = 'waiting'
 
     def ori_end_input(self):  # 输入起始点终点函数
         coordinate = self.text_input.text()
@@ -344,16 +356,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.algorithm_list.show()
 
     def update_pygame(self):
-        sur = pygame.Surface((640, 480))
-        sur.fill((64, 128, 192, 224))
-        pygame.draw.circle(sur, (55, 11, 55, 111), (self.mu, self.mu), 50)
-        self.img.update_pyqt(sur)
+        # sur = pygame.Surface((640, 480))
+        # sur.fill((64, 128, 192, 224))
+        # pygame.draw.circle(sur, (55, 11, 55, 111), (self.mu, self.mu), 50)
+        self.surface.update()
+        self.img.update_pyqt(self.surface)
         self.img.update()
         # self.img = AnimationWidget(self.surface)
 
     def next_iter(self):
         self.mu += 1
-        print(self.mu)
+        # print(self.mu)
         self.update_pygame()
         # self.update()
 
@@ -370,13 +383,9 @@ if __name__ == '__main__':
     pygame.init()
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = QtWidgets.QMainWindow()
-    s = pygame.Surface((640, 480))
-    s.fill((64, 128, 192, 224))
-    pygame.draw.circle(s, (255, 255, 255, 255), (100, 100), 50)
-    # grid_widget = AnimationWidget(s)
-    ui = Ui_MainWindow(mainWindow, s)
+    animation_sur = Animation()
+    ui = Ui_MainWindow(mainWindow, animation_sur)
     # 添加地图
     ui.layout.addWidget(ui.img)
-    # ui.show()
     mainWindow.show()
     sys.exit(app.exec())
