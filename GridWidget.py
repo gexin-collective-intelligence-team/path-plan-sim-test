@@ -62,7 +62,6 @@ class GridWidget(QWidget):
                 if self.Map[y][x] == 1:
                     if self.startPoint is None:  # 起点设置
                         self.win_main.printf("添加起始点：", y, x)
-
                         if self.grid_colors[x][y] == QColor(255, 255, 255):
                             self.grid_colors[x][y] = QColor(255, 0, 0)
                         else:
@@ -317,11 +316,12 @@ class GridWidget(QWidget):
         if self.Map[y][x] == 1:
             if self.startPoint is None:  # 起点设置
                 self.win_main.printf("添加起始点：", y, x)
-
                 if self.grid_colors[x][y] == QColor(255, 255, 255):
                     self.grid_colors[x][y] = QColor(255, 0, 0)
                 self.startPoint = (y, x)
                 print(self.startPoint)
+            else:
+                self.win_main.printf("已设置起点！",None,None)
             self.update()
 
     def painting_end(self, x1, y1):  # 假设输入终止点前地图为空，所以直接填色即可
@@ -332,6 +332,8 @@ class GridWidget(QWidget):
                 if self.grid_colors[x1][y1] == QColor(255, 255, 255):
                     self.grid_colors[x1][y1] = QColor(0, 255, 0)
                 self.endPoint = (y1, x1)
+            else:
+                self.win_main.printf("已设置终点！", None, None)
                 print(self.endPoint)
             self.update()
 
@@ -375,12 +377,39 @@ class GridWidget(QWidget):
     def randomBlock(self,num):
         for i in range(num):
             while True:
-                rand_x = random.randint(0, self.width - 1)
-                rand_y = random.randint(0, self.height - 1)
-                if (rand_x, rand_y) != self.startPoint and (rand_x, rand_y) != self.endPoint and self.Map[rand_y][rand_x] != 0:
-                    self.Map[rand_y][rand_x] = 0 # 设置障碍物
-                    self.grid_colors[rand_x][rand_y] = QColor(0, 0, 0)
-
+                x = random.randint(0, self.width - 1)
+                y = random.randint(0, self.height - 1)
+                if (x, y) != self.startPoint and (x, y) != self.endPoint and self.Map[y][x] != 0:
+                    self.Map[y][x] = 0 # 设置障碍物
+                    self.grid_colors[x][y] = QColor(0, 0, 0)
                     break
         print(self.Map)
         self.update()
+
+    # 随机起始点方法
+    def generateRandomStart(self):
+        if self.startPoint is None:
+            # 生成随机的x和y坐标
+            x = random.randint(0, self.width - 1)
+            y = random.randint(0, self.height - 1)
+            self.startPoint = (y, x)
+            self.win_main.printf("添加起始点：", y, x)
+            if self.grid_colors[x][y] == QColor(255, 255, 255):
+                self.grid_colors[x][y] = QColor(255, 0, 0)
+            self.update()
+        else:
+            self.win_main.printf("error: 已经设置起点！", None, None)
+
+        if self.endPoint is None and self.endPoint != self.startPoint:
+            # 生成随机的x和y坐标
+            x_1 = random.randint(0, self.width - 1)
+            y_1 = random.randint(0, self.height - 1)
+            self.endPoint = (y_1,x_1)
+            self.win_main.printf("添加终点：",y_1,x_1)
+            if self.grid_colors[x_1][y_1] == QColor(255, 255, 255):
+                self.grid_colors[x_1][y_1] = QColor(0, 255, 0)
+            self.update()
+        else:
+            self.win_main.printf("error: 已经设置终点！", None, None)
+        self.update()
+

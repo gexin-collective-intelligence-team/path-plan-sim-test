@@ -139,6 +139,11 @@ class Ui_MainWindow(object):
         self.pushButton_5.setObjectName("pushButton_5")
         # self.pushButton_5.clicked.connect(self.block_click)
         self.pushButton_5.clicked.connect(lambda:grid_widget.randomBlock(int(self.lineEdit_block.text())))
+        # 随机起始点按钮
+        self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_6.setGeometry(QtCore.QRect(310, 480, 80, 23))
+        self.pushButton_6.setObjectName("pushButton_6")
+        self.pushButton_6.clicked.connect(grid_widget.generateRandomStart)
         self.actionCreate = QtWidgets.QAction(MainWindow)
         self.actionCreate.setObjectName("actionCreate")
         # 点击菜单连接方法
@@ -277,6 +282,7 @@ class Ui_MainWindow(object):
         self.actionArithmeticList.setText(_translate("MainWindow", "算法列表"))
         self.pushButton_4.setText(_translate("MainWindow", "生成"))
         self.pushButton_5.setText(_translate("MainWindow", "随机障碍物"))
+        self.pushButton_6.setText(_translate("MainWindow", "随机起始点"))
         self.combo_arithmetic.setItemText(0, _translate("MainWindow", "请选择算法"))
         self.combo_arithmetic.setItemText(1, _translate("MainWindow", "Astar"))
         self.combo_arithmetic.setItemText(2, _translate("MainWindow", "RRT"))
