@@ -1,7 +1,7 @@
-from config import *
-from rrt import rrt
-import drawing
-import events
+from .config import *
+from .rrt import rrt
+from . import drawing
+from . import events
 import pygame as pg
 
 pg.init()

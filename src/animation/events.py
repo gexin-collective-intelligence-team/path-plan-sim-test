@@ -1,6 +1,6 @@
-from config import *
-from utils import dist
-import drawing
+from .config import *
+from .utils import dist
+from . import drawing
 import pygame as pg
 
 mustQuit = False  # flag to indicate that the user closed the program's window.

@@ -1,65 +1,66 @@
-from points_container import PointsContainer
-from collision import collision
-from utils import randomPoint, inside
+from .points_container import PointsContainer
+from .collision import collision
+from .utils import random_point, inside
 import pygame as pg
-import drawing
-import events
+from . import drawing
+from . import events
 import time
 
+
 def rrt(start, goal, obstacles):
-	"""
-	start -- point (x, y)
-	goal  -- point (x, y)
-	obstacles: pygame.Surface
-	"""
-	parent = { start: None }
-	depth = { start: 0 }
+    """
+    start -- point (x, y)
+    goal  -- point (x, y)
+    obstacles: pygame.Surface
+    """
+    parent = {start: None}
+    depth = {start: 0}
 
-	container = PointsContainer()
-	container.insert(start)
-	
-	height = 0
-	nodes = 1
+    container = PointsContainer()
+    container.insert(start)
 
-	current = start
+    height = 0
+    nodes = 1
 
-	startTime = time.perf_counter()
+    current = start
 
-	while not inside(current, goal):
-		if not events.rrt_handler():  # handle user events.
-			return None
+    start_time = time.perf_counter()
 
-		if drawing.showInfo:  # drawing-related.
-			elapsed = time.perf_counter() - startTime
-			drawing.update_info(elapsed, nodes, height)
-			drawing.update()
+    while not inside(current, goal):
+        if not events.rrt_handler():  # handle user events.
+            return None
 
-		sample = randomPoint()
-		nearest = container.nns(sample)
+        if drawing.showInfo:  # drawing-related.
+            elapsed = time.perf_counter() - start_time
+            drawing.update_info(elapsed, nodes, height)
+            drawing.update()
 
-		if (sample == nearest):  # do not allow two identical points.
-			continue
-		
-		if not collision(sample, nearest, obstacles):
-			container.insert(sample)
-			parent[sample] = nearest
-			depth[sample] = depth[nearest] + 1
+        sample = random_point()
+        nearest = container.nns(sample)
 
-			height = max(height, depth[sample])
-			nodes += 1
+        if sample == nearest:  # do not allow two identical points.
+            continue
 
-			drawing.add_edge((nearest, sample))
+        if not collision(sample, nearest, obstacles):
+            container.insert(sample)
+            parent[sample] = nearest
+            depth[sample] = depth[nearest] + 1
 
-			current = sample
-	
-	if not goal in parent:
-		parent[goal] = current
-		depth[goal] = depth[current] + 1
-		height = max(height, depth[goal])
-		nodes += 1
-		drawing.add_edge((current, goal))
+            height = max(height, depth[sample])
+            nodes += 1
 
-	elapsed = time.perf_counter() - startTime
-	drawing.update_info(elapsed, nodes, height, depth[goal])
+            drawing.add_edge((nearest, sample))
 
-	return parent
+            current = sample
+
+    if goal not in parent:
+        parent[goal] = current
+        depth[goal] = depth[current] + 1
+        height = max(height, depth[goal])
+        nodes += 1
+        drawing.add_edge((current, goal))
+
+    elapsed = time.perf_counter() - start_time
+    drawing.update_info(elapsed, nodes, height, depth[goal])
+
+    return parent

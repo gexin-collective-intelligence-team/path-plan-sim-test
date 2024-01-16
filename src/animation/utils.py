@@ -1,5 +1,5 @@
 from random import randrange as rand
-from config import *
+from .config import *
 import math
 
 
@@ -13,7 +13,7 @@ def dist(p1, p2):
     return math.hypot(p2[0] - p1[0], p2[1] - p1[1])
 
 
-def randomPoint():
+def random_point():
     """
     Returns coordinates of a random point on the screen.
     """

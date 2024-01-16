@@ -4,7 +4,7 @@ All pygame.draw commands must be executed inside this module.
 It also contains important variables related to drawing and other uses,
   that are accessible by other modules, such as startPos and goalPos.
 """
-from config import *
+from .config import *
 import pygame as pg
 
 # Reference to the application's screen:

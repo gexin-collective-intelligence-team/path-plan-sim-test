@@ -1,9 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QColor, QPainter
-from PyQt5.QtWidgets import QWidget, QDialog, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 from MainWindow import Ui_MainWindow
-from GridWidget import GridWidget
+from src.GridWidget import GridWidget
 
 
 class Ui_Form(object):
@@ -19,7 +18,7 @@ class Ui_Form(object):
         Form.setMinimumSize(QtCore.QSize(580, 400))
         Form.setMaximumSize(QtCore.QSize(580, 400))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("../img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
         Form.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.label_2 = QtWidgets.QLabel(Form)
@@ -30,7 +29,7 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy)
         self.label_2.setText("")
-        self.label_2.setPixmap(QtGui.QPixmap("./img/logo.png"))
+        self.label_2.setPixmap(QtGui.QPixmap("../img/logo.png"))
         self.label_2.setObjectName("label_2")
         self.label = QtWidgets.QLabel(Form)
         self.label.setGeometry(QtCore.QRect(260, 70, 281, 71))

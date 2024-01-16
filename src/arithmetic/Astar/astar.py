@@ -1,6 +1,6 @@
 # 姓名：jujianqiang
 # 2023/12/8 11:40
-from arithmetic.Astar.Node import Node
+from src.arithmetic.Astar.Node import Node
 
 
 def getKeyforSort(element: Node):

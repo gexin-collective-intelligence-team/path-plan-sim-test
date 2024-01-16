@@ -1,5 +1,5 @@
-from config import OBSTACLES_COLOR
-from utils import dist, normalize
+from .config import OBSTACLES_COLOR
+from .utils import dist, normalize
 
 
 def collision(src, dst, obstacles):

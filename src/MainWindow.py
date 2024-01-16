@@ -1,19 +1,24 @@
 import re
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QMainWindow, QMessageBox, QApplication, QFileDialog
-from AlgorithmList import AlgorithmList
-from GridWidget import GridWidget
+from PyQt5.QtWidgets import QMessageBox
+from src.AlgorithmList import AlgorithmList
+from src.GridWidget import GridWidget
+from AnimationWidget import AnimationWidget
+import pygame
+from PyQt5.QtCore import QTimer
+import animation.drawing
 
 
-class Ui_MainWindow(object):
+class Ui_MainWindow(QtWidgets.QMainWindow):
     windows = []  # 存储所有创建的窗口实例
 
-    def setupUi(self, MainWindow, grid_widget):
+    def __init__(self, MainWindow, surface, parent=None):
+        super(Ui_MainWindow, self).__init__(parent)
         self.loginWindow_new = None
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1006, 850)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("../img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -47,16 +52,17 @@ class Ui_MainWindow(object):
         # self.pushButton.setGeometry(QtCore.QRect(40, 450, 75, 23))
         self.pushButton_new.setGeometry(QtCore.QRect(40, 450, 75, 25))
         self.pushButton_new.setObjectName("pushButton_new")
-        self.pushButton_new.clicked.connect(self.startPath)
+        # self.pushButton_new.clicked.connect(self.startPath)
+        self.pushButton_new.clicked.connect(self.next_iter)
         # 清除起始点按钮
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(220, 450, 75, 25))
         self.pushButton_3.setObjectName("pushButton_3")
         # self.pushButton_3.clicked.connect(self.clearStartAndEnd)
         # 清除起始点方法链接
-        self.pushButton_3.clicked.connect(grid_widget.clearStartAndEnd)
+        # self.pushButton_3.clicked.connect(animation_widget.clearStartAndEnd)
         # 清楚所有障碍方法链接
-        self.pushButton.clicked.connect(grid_widget.clearObstacles)
+        # self.pushButton.clicked.connect(animation_widget.clearObstacles)
         # self.checkBox = QtWidgets.QCheckBox(self.centralwidget)
         # self.checkBox.setGeometry(QtCore.QRect(310, 450, 71, 21))
         # self.checkBox.setObjectName("checkBox")
@@ -106,15 +112,15 @@ class Ui_MainWindow(object):
         self.btn_modifyMap.setGeometry(QtCore.QRect(150, 475, 75, 23))
         self.btn_modifyMap.setObjectName("btn_modifyMap")
         # 调整地图的粒度
-        self.btn_modifyMap.clicked.connect(lambda: grid_widget.modifyMap(int(self.lineEdit.text())))
+        # self.btn_modifyMap.clicked.connect(lambda: animation_widget.modifyMap(int(self.lineEdit.text())))
         # 默认地图按钮
         self.btn_default = QtWidgets.QPushButton(self.centralwidget)
         self.btn_default.setGeometry(QtCore.QRect(230, 475, 75, 23))
         self.btn_default.setObjectName("btn_default")
         # 恢复地图默认粒度
-        self.btn_default.clicked.connect(grid_widget.defaultMap)
+        # self.btn_default.clicked.connect(animation_widget.defaultMap)
         # 打开地图的方法
-        self.actionOpen.triggered.connect(grid_widget.openMap)
+        # self.actionOpen.triggered.connect(animation_widget.openMap)
         # 输入起始点确认按钮
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(830, 433, 75, 23))
@@ -134,7 +140,7 @@ class Ui_MainWindow(object):
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
         # 保存地图的方法
-        self.actionSave.triggered.connect(grid_widget.saveMap)
+        # self.actionSave.triggered.connect(animation_widget.saveMap)
 
         self.createArithmetic = QtWidgets.QAction(MainWindow)
         self.createArithmetic.setObjectName("createArithmetic")
@@ -154,7 +160,7 @@ class Ui_MainWindow(object):
         self.actionmodel.setObjectName("actionmodel")
 
         # 下载地图模板
-        self.actionmodel.triggered.connect(grid_widget.downLoadModelMap)
+        # self.actionmodel.triggered.connect(animation_widget.downLoadModelMap)
         self.actionArithmeticList = QtWidgets.QAction(MainWindow)
         self.actionArithmeticList.setObjectName("actionArithmeticList")
         self.actionArithmeticList.triggered.connect(self.openArithmeticList)
@@ -179,7 +185,15 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.grid_widget = grid_widget
+        # self.animation_widget = animation_widget
+
+        self.mu = 0
+        self.surface = surface
+        self.img = AnimationWidget(self.surface)
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.next_iter)
+        self.start_timer()
 
     # 文本框输出提示信息
     def printf(self, msg, x, y):
@@ -191,13 +205,15 @@ class Ui_MainWindow(object):
     # 创建新窗口方法
     def openNewWindow(self):
         new_window = QtWidgets.QMainWindow()
-        ui = Ui_MainWindow()
-        grid_widget = GridWidget(ui)
-        ui.setupUi(new_window, grid_widget)
+        sur_pygame = pygame.Surface((640, 480))
+        sur_pygame.fill((64, 128, 192, 224))
+        pygame.draw.circle(sur_pygame, (255, 255, 255, 255), (100, 100), 50)
+        animation_widget = AnimationWidget(sur_pygame)
+        ui = Ui_MainWindow(new_window, sur_pygame, animation_widget)
 
         new_window.setWindowTitle('基于Pygame的路径规划算法仿真平台')
         # 添加地图
-        ui.layout.addWidget(grid_widget)
+        ui.layout.addWidget(animation_widget)
         new_window.show()
         self.windows.append(new_window)  # 将新创建的窗口实例添加到列表中
 
@@ -272,7 +288,7 @@ class Ui_MainWindow(object):
     def startPath(self):
         # 根据不同的算法
         if self.checkBox.isChecked():
-            self.grid_widget.startPath()
+            self.animation_widget.startPath()
 
     def ori_end_input(self):  # 输入起始点终点函数
         coordinate = self.text_input.text()
@@ -318,25 +334,49 @@ class Ui_MainWindow(object):
         keyy_2 = int(match_2.group(2))  # 提取纵坐标
         grid_widget.paint_block(keyx, keyy, keyx_2, keyy_2)
         # for _ in range(250):  # 随机选择若干个格子变黑
-        #     row = random.randint(0, self.grid_widget.rows - 1)
-        #     col = random.randint(0, self.grid_widget.columns - 1)
-        #     label = self.grid_widget.layout().itemAtPosition(row, col).widget()
+        #     row = random.randint(0, self.animation_widget.rows - 1)
+        #     col = random.randint(0, self.animation_widget.columns - 1)
+        #     label = self.animation_widget.layout().itemAtPosition(row, col).widget()
         #     label.setStyleSheet("background-color: black")
 
     def openArithmeticList(self):
         self.algorithm_list = AlgorithmList()
         self.algorithm_list.show()
 
+    def update_pygame(self):
+        sur = pygame.Surface((640, 480))
+        sur.fill((64, 128, 192, 224))
+        pygame.draw.circle(sur, (55, 11, 55, 111), (self.mu, self.mu), 50)
+        self.img.update_pyqt(sur)
+        self.img.update()
+        # self.img = AnimationWidget(self.surface)
+
+    def next_iter(self):
+        self.mu += 1
+        print(self.mu)
+        self.update_pygame()
+        # self.update()
+
+    def start_timer(self):
+        self.timer.start(10)
+
+    def end_timer(self):
+        self.timer.stop()
+
 
 if __name__ == '__main__':
     import sys
 
+    pygame.init()
     app = QtWidgets.QApplication(sys.argv)
-    ui = Ui_MainWindow()
     mainWindow = QtWidgets.QMainWindow()
-    grid_widget = GridWidget(ui)
-    ui.setupUi(mainWindow, grid_widget)
+    s = pygame.Surface((640, 480))
+    s.fill((64, 128, 192, 224))
+    pygame.draw.circle(s, (255, 255, 255, 255), (100, 100), 50)
+    # grid_widget = AnimationWidget(s)
+    ui = Ui_MainWindow(mainWindow, s)
     # 添加地图
-    ui.layout.addWidget(grid_widget)
+    ui.layout.addWidget(ui.img)
+    # ui.show()
     mainWindow.show()
     sys.exit(app.exec())

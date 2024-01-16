@@ -1,7 +1,7 @@
 # 姓名：jujianqiang
 # 2023/12/8 11:41
-from arithmetic.Astar.astar import astar
-from arithmetic.Astar.Map import Map
+from src.arithmetic.Astar.astar import astar
+from src.arithmetic.Astar.Map import Map
 
 mymap = [
     [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
