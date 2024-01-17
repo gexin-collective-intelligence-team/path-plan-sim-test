@@ -18,6 +18,7 @@ class Ui_Form(object):
         Form.setSizePolicy(sizePolicy)
         Form.setMinimumSize(QtCore.QSize(580, 400))
         Form.setMaximumSize(QtCore.QSize(580, 400))
+
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("./img/logo.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)

@@ -148,7 +148,7 @@ class GridWidget(QWidget):
             for j in range(self.width):
                 if self.Map[i][j] == 0:
                     count += 1
-        if self.result is None and self.startPoint is None and self.endPoint is None and count > 0:
+        if self.result is None and self.startPoint is None and self.endPoint is None and count == 0:
             if isinstance(size, str):
                 self.win_main.printf("请输入正确的分辨率！", None, None)
             if int(size) >= 0:
