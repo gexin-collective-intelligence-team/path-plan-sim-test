@@ -6,6 +6,6 @@
 
 ---
 
-TODO：
+TODO:
 - 如何绘制障碍物
 - 完善animation包

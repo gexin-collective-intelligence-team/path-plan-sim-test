@@ -2,20 +2,19 @@ import re
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from src.AlgorithmList import AlgorithmList
-from src.GridWidget import GridWidget
-from AnimationWidget import AnimationWidget
 import pygame
-from PyQt5.QtCore import QTimer
-from config import *
-from animation.animation import Animation
+from animation.widget import AnimationWidget
 from animation.rrt import rrt
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
     windows = []  # 存储所有创建的窗口实例
 
-    def __init__(self, MainWindow, surface, parent=None):
-        super(Ui_MainWindow, self).__init__(parent)
+    def __init__(self, MainWindow, parent=None):
+        super().__init__(parent)
+
+        self.animation_widget = AnimationWidget()
+
         self.loginWindow_new = None
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1006, 850)
@@ -64,7 +63,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # 清除起始点方法链接
         # self.pushButton_3.clicked.connect(animation_widget.clearStartAndEnd)
         # 清楚所有障碍方法链接
-        # self.pushButton.clicked.connect(animation_widget.clearObstacles)
+        self.pushButton.clicked.connect(self.animation_widget.surface.clear_tree)
         # self.checkBox = QtWidgets.QCheckBox(self.centralwidget)
         # self.checkBox.setGeometry(QtCore.QRect(310, 450, 71, 21))
         # self.checkBox.setObjectName("checkBox")
@@ -133,7 +132,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_5.setGeometry(QtCore.QRect(830, 470, 90, 23))
         self.pushButton_5.setObjectName("pushButton_5")
         # self.pushButton_5.clicked.connect(self.block_click)
-        self.pushButton_5.clicked.connect(surface.load_obstacles)
+        self.pushButton_5.clicked.connect(self.animation_widget.surface.load_obstacles)
 
         self.actionCreate = QtWidgets.QAction(MainWindow)
         self.actionCreate.setObjectName("actionCreate")
@@ -191,13 +190,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         # self.animation_widget = animation_widget
 
-        self.mu = 0
-        self.surface = surface
-        self.img = AnimationWidget(self.surface)
+        # self.mu = 0
+        # self.animation_widget = animation_widget
+        # self.img = AnimationWidget(self.surface)
 
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.next_iter)
-        self.start_timer()
+        # self.timer = QTimer()
+        # self.timer.timeout.connect(self.next_iter)
+        # self.start_timer()
+
+        self.layout.addWidget(self.animation_widget)
 
     # 文本框输出提示信息
     def printf(self, msg, x, y):
@@ -294,10 +295,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #     if self.checkBox.isChecked():
     #         self.animation_widget.startPath()
     def start_path(self):
-        self.surface.clear_edges_pool()
-        tree = rrt(self.surface, self.surface.start_pos, self.surface.goal_pos, self.surface.obstacles_surface)
+        self.animation_widget.surface.clear_edges_pool()
+        tree = rrt(self.animation_widget.surface, self.animation_widget.surface.start_pos, self.animation_widget.surface.goal_pos, self.animation_widget.surface.obstacles_surface)
         if tree:  # A path was found:
-            self.surface.draw_path(tree)
+            self.animation_widget.surface.draw_path(tree)
             # game_state = 'path-found'
         # else:  # User terminated the algorithm's execution:
         #     game_state = 'waiting'
@@ -355,26 +356,26 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.algorithm_list = AlgorithmList()
         self.algorithm_list.show()
 
-    def update_pygame(self):
-        # sur = pygame.Surface((640, 480))
-        # sur.fill((64, 128, 192, 224))
-        # pygame.draw.circle(sur, (55, 11, 55, 111), (self.mu, self.mu), 50)
-        self.surface.update()
-        self.img.update_pyqt(self.surface)
-        self.img.update()
-        # self.img = AnimationWidget(self.surface)
+    # def update_pygame(self):
+    #     # sur = pygame.Surface((640, 480))
+    #     # sur.fill((64, 128, 192, 224))
+    #     # pygame.draw.circle(sur, (55, 11, 55, 111), (self.mu, self.mu), 50)
+    #     self.surface.update()
+    #     self.img.update_pyqt(self.surface)
+    #     self.img.update()
+    #     # self.img = AnimationWidget(self.animation_widget)
 
-    def next_iter(self):
-        self.mu += 1
-        # print(self.mu)
-        self.update_pygame()
-        # self.update()
+    # def next_iter(self):
+    #     self.mu += 1
+    #     # print(self.mu)
+    #     self.update_pygame()
+    #     # self.update()
 
-    def start_timer(self):
-        self.timer.start(10)
-
-    def end_timer(self):
-        self.timer.stop()
+    # def start_timer(self):
+    #     self.timer.start(10)
+    #
+    # def end_timer(self):
+    #     self.timer.stop()
 
 
 if __name__ == '__main__':
@@ -383,9 +384,11 @@ if __name__ == '__main__':
     pygame.init()
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = QtWidgets.QMainWindow()
-    animation_sur = Animation()
-    ui = Ui_MainWindow(mainWindow, animation_sur)
+    # animation_sur = Surface()
+    # animation_wid = AnimationWidget()
+    # ui = Ui_MainWindow(mainWindow, animation_wid)
+    ui = Ui_MainWindow(mainWindow)
     # 添加地图
-    ui.layout.addWidget(ui.img)
+    # ui.layout.addWidget(ui.img)
     mainWindow.show()
     sys.exit(app.exec())

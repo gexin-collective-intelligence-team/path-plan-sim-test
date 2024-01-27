@@ -1,11 +1,9 @@
-from .points_container import PointsContainer
-from .collision import collision
-from .utils import random_point, inside
-import pygame as pg
-# from . import drawing
-from .animation import Animation
-from . import events
 import time
+
+from . import events
+from .collision import collision
+from .points_container import PointsContainer
+from .utils import random_point, inside
 
 
 def rrt(surface, start, goal, obstacles):

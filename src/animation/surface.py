@@ -4,7 +4,7 @@ from pygame import font
 font.init()
 
 
-class Animation(pygame.Surface):
+class Surface(pygame.Surface):
     WIDTH = 900
     HEIGHT = 400
     START_INIT_POS = (30, 30)
@@ -63,16 +63,14 @@ class Animation(pygame.Surface):
         self.tree_surface.fill(0)
 
     def save_obstacles(self):
-        pygame.image.save(self.obstacles_surface, Animation.MAP_FILENAME)
+        pygame.image.save(self.obstacles_surface, Surface.MAP_FILENAME)
 
     def load_obstacles(self):
-        # global obstaclesSurface
-        self.obstacles_surface = pygame.image.load(Animation.MAP_FILENAME)
+        self.obstacles_surface = pygame.image.load(Surface.MAP_FILENAME)
 
     def add_edge(self, edge):
-        # global edgesPool
         self.edges_pool.append(edge)
-        if len(self.edges_pool) >= Animation.MAX_EDGES_POOL:
+        if len(self.edges_pool) >= Surface.MAX_EDGES_POOL:
             for e in self.edges_pool:
                 pygame.draw.circle(self.tree_surface, (255, 128, 0), e[1], 2)
                 pygame.draw.line(self.tree_surface, (255, 255, 255), e[0], e[1])
@@ -80,11 +78,9 @@ class Animation(pygame.Surface):
             self.update()
 
     def clear_edges_pool(self):
-        # global edgesPool
         self.edges_pool = []
 
     def toggle_info(self):
-        # global showInfo
         self.show_info = not self.show_info
 
     def update_info(self, elapsed, nodes, height, length=None):
@@ -98,11 +94,10 @@ class Animation(pygame.Surface):
         if length:
             lines.append(f'Path length: {length}')
         for i in range(len(lines)):
-            temp = Animation.FONT.render(lines[i], 0, (255, 255, 0), (0, 0, 1))
-            self.info_surface.blit(temp, (self.width - temp.get_width(), i * Animation.FONT.get_height()))
+            temp = Surface.FONT.render(lines[i], 0, (255, 255, 0), (0, 0, 1))
+            self.info_surface.blit(temp, (self.width - temp.get_width(), i * Surface.FONT.get_height()))
 
     def draw_path(self, parent):
-        # global showInfo
         self.show_info = True
         current = self.goal_pos
         while parent[current]:
